@@ -1,5 +1,6 @@
 package io.huyhoang.instagramclone.config;
 
+import io.huyhoang.instagramclone.exception.AuthEntryPointExceptionHandler;
 import io.huyhoang.instagramclone.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new AuthEntryPointExceptionHandler());
     }
 
     @Override
