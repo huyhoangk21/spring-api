@@ -1,11 +1,8 @@
 package io.huyhoang.instagramclone.config;
 
 import com.google.common.base.Strings;
-import io.huyhoang.instagramclone.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

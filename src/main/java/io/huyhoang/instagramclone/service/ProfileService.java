@@ -1,12 +1,16 @@
 package io.huyhoang.instagramclone.service;
 
+import io.huyhoang.instagramclone.dto.ProfileRequest;
 import io.huyhoang.instagramclone.dto.ProfileResponse;
 import io.huyhoang.instagramclone.entity.Profile;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.repository.ProfileRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +20,13 @@ import java.util.UUID;
 public class ProfileService {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    Logger log = LoggerFactory.getLogger(ProfileService.class);
 
     @Autowired
-    public ProfileService(UserRepository userRepository) {
+    public ProfileService(UserRepository userRepository, ProfileRepository profileRepository) {
         this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
     }
 
     @Transactional(readOnly = true)
@@ -28,6 +35,20 @@ public class ProfileService {
                 .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
         return convertDTO(user.getProfile());
 
+    }
+
+    @Transactional
+    public ProfileResponse updateProfile(ProfileRequest profileRequest) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("USER ID {}", userId);
+        User user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
+        Profile profile = user.getProfile();
+        profile.setBio(profileRequest.getBio());
+        profile.setImageUrl(profileRequest.getImageUrl());
+        profile.setWebsiteUrl(profileRequest.getWebsiteUrl());
+        profileRepository.save(profile);
+        return convertDTO(profile);
     }
 
     private ProfileResponse convertDTO(Profile profile) {
@@ -39,4 +60,5 @@ public class ProfileService {
                 profile.getCreatedAt(),
                 profile.getUpdatedAt());
     }
+
 }
