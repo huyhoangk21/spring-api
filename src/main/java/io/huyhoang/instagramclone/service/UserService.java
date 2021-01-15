@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -91,6 +93,15 @@ public class UserService {
                 .body(convertDTO(user));
     }
 
+    @Transactional(readOnly = true)
+    public List<UserResponse> allUsers() {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(this::convertDTO)
+                .collect(Collectors.toList());
+    }
+
     public UserResponse convertDTO(User user) {
         return new UserResponse(
                 user.getUserId(),
@@ -99,4 +110,6 @@ public class UserService {
                 user.getCreatedAt(),
                 user.getUpdatedAt());
     }
+
+
 }
