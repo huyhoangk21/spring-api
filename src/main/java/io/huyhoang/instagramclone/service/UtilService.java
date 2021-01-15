@@ -1,7 +1,12 @@
 package io.huyhoang.instagramclone.service;
 
+import io.huyhoang.instagramclone.dto.CommentResponse;
+import io.huyhoang.instagramclone.dto.PostResponse;
+import io.huyhoang.instagramclone.dto.ProfileResponse;
+import io.huyhoang.instagramclone.dto.UserResponse;
 import io.huyhoang.instagramclone.entity.Comment;
 import io.huyhoang.instagramclone.entity.Post;
+import io.huyhoang.instagramclone.entity.Profile;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.repository.CommentRepository;
@@ -54,6 +59,46 @@ public class UtilService {
     public Comment getComment(UUID commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment does not exist"));
+    }
+
+    public UserResponse getUserResponse(User user) {
+        return new UserResponse(
+                user.getUserId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                getProfileResponse(user.getProfile()));
+    }
+
+    public PostResponse getPostResponse(Post post) {
+        return new PostResponse(
+                post.getPostId(),
+                post.getUser().getUserId(),
+                post.getCaption(),
+                post.getImageUrl(),
+                post.getCreatedAt(),
+                post.getUpdatedAt());
+    }
+
+    public CommentResponse getCommentResponse(Comment comment) {
+        return new CommentResponse(
+                comment.getCommentId(),
+                comment.getPost().getPostId(),
+                comment.getUser().getUserId(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt());
+    }
+
+    public ProfileResponse getProfileResponse(Profile profile) {
+        return new ProfileResponse(
+                profile.getProfileId(),
+                profile.getBio(),
+                profile.getImageUrl(),
+                profile.getWebsiteUrl(),
+                profile.getCreatedAt(),
+                profile.getUpdatedAt());
     }
 
 }

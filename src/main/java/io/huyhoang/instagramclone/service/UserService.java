@@ -10,14 +10,9 @@ import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.repository.ProfileRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,6 +34,7 @@ public class UserService {
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UtilService utilService;
     private final JwtConfig jwtConfig;
 
     @Autowired
@@ -46,13 +42,16 @@ public class UserService {
                        ProfileRepository profileRepository,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager,
+                       UtilService utilService,
                        JwtConfig jwtConfig) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.utilService = utilService;
         this.jwtConfig = jwtConfig;
     }
+
 
     @Transactional
     public UserResponse signup(SignupRequest signupRequest) {
@@ -74,7 +73,7 @@ public class UserService {
         userRepository.save(user);
         profileRepository.save(profile);
 
-        return convertDTO(user);
+        return utilService.getUserResponse(user);
 
     }
 
@@ -101,7 +100,7 @@ public class UserService {
         return ResponseEntity
                 .ok()
                 .header(jwtConfig.getAuthorizationHeader(), jwtConfig.getPrefix() + " " + token)
-                .body(convertDTO(user));
+                .body(utilService.getUserResponse(user));
     }
 
     @Transactional(readOnly = true)
@@ -109,16 +108,7 @@ public class UserService {
         return userRepository
                 .findAll()
                 .stream()
-                .map(this::convertDTO)
+                .map(utilService::getUserResponse)
                 .collect(Collectors.toList());
-    }
-
-    private UserResponse convertDTO(User user) {
-        return new UserResponse(
-                user.getUserId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt());
     }
 }

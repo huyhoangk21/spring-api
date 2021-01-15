@@ -17,16 +17,20 @@ public class UserResponse implements Serializable {
 
     private final Instant updatedAt;
 
+    private final ProfileResponse profile;
+
     public UserResponse(UUID userId,
                         String username,
                         String email,
                         Instant createdAt,
-                        Instant updatedAt) {
+                        Instant updatedAt,
+                        ProfileResponse profile) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.profile = profile;
     }
 
     public UUID getUserId() {
@@ -47,5 +51,9 @@ public class UserResponse implements Serializable {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public ProfileResponse getProfile() {
+        return profile;
     }
 }
