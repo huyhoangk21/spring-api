@@ -81,6 +81,4 @@ public class PostService {
                 post.getCreatedAt(),
                 post.getUpdatedAt());
     }
-
-
 }

@@ -33,6 +33,9 @@ public class User extends Auditable{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Post> posts;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
+
     public User() {
     }
 
@@ -92,6 +95,14 @@ public class User extends Auditable{
         this.posts = posts;
     }
 
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -101,6 +112,7 @@ public class User extends Auditable{
                 ", password='" + password + '\'' +
                 ", profile=" + profile +
                 ", posts=" + posts +
+                ", comments=" + comments +
                 '}';
     }
 }
