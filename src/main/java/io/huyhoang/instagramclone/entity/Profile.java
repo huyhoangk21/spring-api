@@ -1,5 +1,7 @@
 package io.huyhoang.instagramclone.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -8,8 +10,10 @@ import java.util.UUID;
 public class Profile extends Auditable{
 
     @Id
-    @Column(name = "user_id")
-    private UUID userId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "profile_id", nullable = false, unique = true)
+    private UUID profileId;
 
     @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
@@ -20,12 +24,13 @@ public class Profile extends Auditable{
     @Column(name = "website_url")
     private String websiteUrl;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "profile")
     private User user;
 
     public Profile() {
+        this.bio = "";
+        this.imageUrl = "";
+        this.websiteUrl = "";
     }
 
     public Profile(String bio, String imageUrl, String websiteUrl) {
@@ -34,12 +39,12 @@ public class Profile extends Auditable{
         this.websiteUrl = websiteUrl;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getProfileId() {
+        return profileId;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setProfileId(UUID profileId) {
+        this.profileId = profileId;
     }
 
     public String getBio() {
@@ -77,10 +82,11 @@ public class Profile extends Auditable{
     @Override
     public String toString() {
         return "Profile{" +
-                "userId=" + userId +
+                "profileId=" + profileId +
                 ", bio='" + bio + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", websiteUrl='" + websiteUrl + '\'' +
+                ", user=" + user +
                 '}';
     }
 }
