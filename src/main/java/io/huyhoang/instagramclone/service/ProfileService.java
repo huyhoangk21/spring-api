@@ -8,7 +8,6 @@ import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.repository.ProfileRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +18,15 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final AuthService authService;
 
     @Autowired
-    public ProfileService(UserRepository userRepository, ProfileRepository profileRepository) {
+    public ProfileService(UserRepository userRepository,
+                          ProfileRepository profileRepository,
+                          AuthService authService) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
+        this.authService = authService;
     }
 
     @Transactional(readOnly = true)
@@ -36,9 +39,7 @@ public class ProfileService {
 
     @Transactional
     public ProfileResponse updateProfile(ProfileRequest profileRequest) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
+        User user = userRepository.getOne(authService.currentAuth());
         Profile profile = user.getProfile();
         profile.setBio(profileRequest.getBio());
         profile.setImageUrl(profileRequest.getImageUrl());

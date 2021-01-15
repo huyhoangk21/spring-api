@@ -11,7 +11,6 @@ import io.huyhoang.instagramclone.repository.CommentRepository;
 import io.huyhoang.instagramclone.repository.PostRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,38 +22,36 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final AuthService authService;
 
     @Autowired
-    public CommentService(UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository) {
+    public CommentService(UserRepository userRepository,
+                          PostRepository postRepository,
+                          CommentRepository commentRepository,
+                          AuthService authService) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.authService = authService;
     }
 
     @Transactional
     public CommentResponse addComment(CommentRequest commentRequest, UUID postId) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.getOne(UUID.fromString(userId));
+        User user = userRepository.getOne(authService.currentAuth());
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post does not exist"));
-
         Comment comment = new Comment(commentRequest.getContent(), user, post);
-
         commentRepository.save(comment);
-
         return convertDTO(comment);
     }
 
     @Transactional
     public CommentResponse editComment(CommentRequest commentRequest, UUID commentId) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment does not exist"));
-
-        if (!comment.getUser().getUserId().equals(UUID.fromString(userId))) {
+        if (!authService.ownComment(comment)) {
             throw new UnauthorizedException();
         }
-
         comment.setContent(commentRequest.getContent());
         commentRepository.save(comment);
         return convertDTO(comment);
@@ -62,14 +59,11 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(UUID commentId) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment does not exist"));
-
-        if (!comment.getUser().getUserId().equals(UUID.fromString(userId))) {
+        if (!authService.ownComment(comment)) {
             throw new UnauthorizedException();
         }
-
         commentRepository.delete(comment);
     }
 
