@@ -43,8 +43,6 @@ public class UserService {
 
     }
 
-
-
     public UserResponse convertDTO(User user) {
         return new UserResponse(
                 user.getUserId(),
