@@ -70,6 +70,14 @@ public class Post extends Auditable{
         this.user = user;
     }
 
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -77,6 +85,7 @@ public class Post extends Auditable{
                 ", imageUrl='" + imageUrl + '\'' +
                 ", caption='" + caption + '\'' +
                 ", user=" + user +
+                ", comments=" + comments +
                 '}';
     }
 }

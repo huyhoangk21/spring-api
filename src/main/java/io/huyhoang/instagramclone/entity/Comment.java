@@ -11,13 +11,13 @@ public class Comment extends Auditable{
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "comment_id", nullable = false, unique = true, updatable = false)
     private UUID commentId;
 
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String comment;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,8 +30,8 @@ public class Comment extends Auditable{
     public Comment() {
     }
 
-    public Comment(String comment, User user, Post post) {
-        this.comment = comment;
+    public Comment(String content, User user, Post post) {
+        this.content = content;
         this.user = user;
         this.post = post;
     }
@@ -44,12 +44,12 @@ public class Comment extends Auditable{
         this.commentId = commentId;
     }
 
-    public String getComment() {
-        return comment;
+    public String getContent() {
+        return content;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public User getUser() {
@@ -72,7 +72,7 @@ public class Comment extends Auditable{
     public String toString() {
         return "Comment{" +
                 "commentId=" + commentId +
-                ", comment='" + comment + '\'' +
+                ", content='" + content + '\'' +
                 ", user=" + user +
                 ", post=" + post +
                 '}';

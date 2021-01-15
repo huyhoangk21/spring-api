@@ -54,7 +54,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post does not exist"));
         if (!post.getUser().getUserId().equals(UUID.fromString(userId))) {
-            throw new UnauthorizedException("Unauthorized action");
+            throw new UnauthorizedException();
         }
         post.setCaption(postRequest.getCaption());
         postRepository.save(post);
@@ -67,7 +67,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post does not exist"));
         if (!post.getUser().getUserId().equals(UUID.fromString(userId))) {
-            throw new UnauthorizedException("Unauthorized action");
+            throw new UnauthorizedException();
         }
         postRepository.delete(post);
     }

@@ -40,6 +40,6 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     protected ResponseEntity<ApiError> handleUnauthorized(UnauthorizedException ex) {
-        return new ResponseEntity<>(new ApiError(Collections.singletonList(ex.getMessage())), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ApiError(Collections.singletonList("Unauthorized action")), HttpStatus.FORBIDDEN);
     }
 }
