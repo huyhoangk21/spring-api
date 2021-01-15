@@ -5,6 +5,7 @@ import io.huyhoang.instagramclone.dto.PostResponse;
 import io.huyhoang.instagramclone.entity.Post;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
+import io.huyhoang.instagramclone.exception.UnauthorizedException;
 import io.huyhoang.instagramclone.repository.PostRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,29 @@ public class PostService {
         Post post = new Post(postRequest.getImageUrl(), postRequest.getCaption(), user);
         postRepository.save(post);
         return convertDTO(post);
+    }
+    @Transactional
+    public PostResponse editPost(PostRequest postRequest, UUID postId) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post does not exist"));
+        if (!post.getUser().getUserId().equals(UUID.fromString(userId))) {
+            throw new UnauthorizedException("Unauthorized action");
+        }
+        post.setCaption(postRequest.getCaption());
+        postRepository.save(post);
+        return convertDTO(post);
+    }
+
+    @Transactional
+    public void deletePost(UUID postId) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post does not exist"));
+        if (!post.getUser().getUserId().equals(UUID.fromString(userId))) {
+            throw new UnauthorizedException("Unauthorized action");
+        }
+        postRepository.delete(post);
     }
 
     private PostResponse convertDTO(Post post) {

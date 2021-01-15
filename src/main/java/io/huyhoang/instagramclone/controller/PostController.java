@@ -5,6 +5,7 @@ import io.huyhoang.instagramclone.dto.PostResponse;
 import io.huyhoang.instagramclone.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,18 @@ public class PostController {
     @PostMapping(value = "/posts")
     public PostResponse add(@Valid @RequestBody PostRequest postRequest) {
         return postService.addPost(postRequest);
+    }
+
+    @PutMapping(value = "/posts/{postId}")
+    public PostResponse edit(@Valid @RequestBody PostRequest postRequest,
+                             @PathVariable("postId") UUID postId) {
+        return postService.editPost(postRequest, postId);
+    }
+
+    @DeleteMapping(value = "/posts/{postId}")
+    public ResponseEntity<Void> delete(@PathVariable("postId") UUID postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.noContent().build();
     }
 
 }

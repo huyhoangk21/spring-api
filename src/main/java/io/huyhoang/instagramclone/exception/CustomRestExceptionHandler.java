@@ -37,4 +37,9 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException ex) {
         return new ResponseEntity<>(new ApiError(Collections.singletonList(ex.getMessage())), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<ApiError> handleUnauthorized(UnauthorizedException ex) {
+        return new ResponseEntity<>(new ApiError(Collections.singletonList(ex.getMessage())), HttpStatus.FORBIDDEN);
+    }
 }

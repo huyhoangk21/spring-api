@@ -7,8 +7,6 @@ import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.repository.ProfileRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,6 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
-    Logger log = LoggerFactory.getLogger(ProfileService.class);
 
     @Autowired
     public ProfileService(UserRepository userRepository, ProfileRepository profileRepository) {
