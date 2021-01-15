@@ -40,7 +40,6 @@ public class ProfileService {
     @Transactional
     public ProfileResponse updateProfile(ProfileRequest profileRequest) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("USER ID {}", userId);
         User user = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
         Profile profile = user.getProfile();
