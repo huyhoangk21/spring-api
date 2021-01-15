@@ -5,11 +5,8 @@ import io.huyhoang.instagramclone.dto.CommentResponse;
 import io.huyhoang.instagramclone.entity.Comment;
 import io.huyhoang.instagramclone.entity.Post;
 import io.huyhoang.instagramclone.entity.User;
-import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.exception.UnauthorizedException;
 import io.huyhoang.instagramclone.repository.CommentRepository;
-import io.huyhoang.instagramclone.repository.PostRepository;
-import io.huyhoang.instagramclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,27 +16,20 @@ import java.util.UUID;
 @Service
 public class CommentService {
 
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final AuthService authService;
+    private final UtilService utilService;
 
     @Autowired
-    public CommentService(UserRepository userRepository,
-                          PostRepository postRepository,
-                          CommentRepository commentRepository,
-                          AuthService authService) {
-        this.userRepository = userRepository;
-        this.postRepository = postRepository;
+    public CommentService(CommentRepository commentRepository,
+                          UtilService utilService) {
         this.commentRepository = commentRepository;
-        this.authService = authService;
+        this.utilService = utilService;
     }
 
     @Transactional
     public CommentResponse addComment(CommentRequest commentRequest, UUID postId) {
-        User user = userRepository.getOne(authService.currentAuth());
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post does not exist"));
+        User user = utilService.getUser(utilService.currentAuth());
+        Post post = utilService.getPost(postId);
         Comment comment = new Comment(commentRequest.getContent(), user, post);
         commentRepository.save(comment);
         return convertDTO(comment);
@@ -47,9 +37,8 @@ public class CommentService {
 
     @Transactional
     public CommentResponse editComment(CommentRequest commentRequest, UUID commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment does not exist"));
-        if (!authService.ownComment(comment)) {
+        Comment comment = utilService.getComment(commentId);
+        if (!utilService.ownComment(comment)) {
             throw new UnauthorizedException();
         }
         comment.setContent(commentRequest.getContent());
@@ -59,9 +48,8 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(UUID commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment does not exist"));
-        if (!authService.ownComment(comment)) {
+        Comment comment = utilService.getComment(commentId);
+        if (!utilService.ownComment(comment)) {
             throw new UnauthorizedException();
         }
         commentRepository.delete(comment);

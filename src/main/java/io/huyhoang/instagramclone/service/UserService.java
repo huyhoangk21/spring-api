@@ -89,7 +89,7 @@ public class UserService {
         authenticationManager.authenticate(authentication);
 
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
 
         String token = Jwts.builder()
                 .setSubject(user.getUserId().toString())
@@ -121,6 +121,4 @@ public class UserService {
                 user.getCreatedAt(),
                 user.getUpdatedAt());
     }
-
-
 }
