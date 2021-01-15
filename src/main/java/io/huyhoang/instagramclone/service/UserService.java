@@ -40,7 +40,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
-    Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -114,7 +113,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserResponse convertDTO(User user) {
+    private UserResponse convertDTO(User user) {
         return new UserResponse(
                 user.getUserId(),
                 user.getUsername(),

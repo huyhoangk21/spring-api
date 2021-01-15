@@ -33,4 +33,9 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<UserError> handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
         return ResponseEntity.badRequest().body(new UserError(Collections.singletonList(ex.getMessage())));
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResponseEntity<UserError> handleResourceNotFound(ResourceNotFoundException ex) {
+        return new ResponseEntity<>(new UserError(Collections.singletonList(ex.getMessage())), HttpStatus.NOT_FOUND);
+    }
 }
