@@ -1,5 +1,6 @@
 package io.huyhoang.instagramclone.service;
 
+import io.huyhoang.instagramclone.config.JwtConfig;
 import io.huyhoang.instagramclone.dto.LoginRequest;
 import io.huyhoang.instagramclone.dto.SignupRequest;
 import io.huyhoang.instagramclone.dto.UserResponse;
@@ -7,6 +8,7 @@ import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.repository.UserRepository;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +31,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtConfig jwtConfig;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       AuthenticationManager authenticationManager) {
+                       AuthenticationManager authenticationManager,
+                       JwtConfig jwtConfig) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtConfig = jwtConfig;
     }
 
     @Transactional
@@ -76,13 +81,13 @@ public class UserService {
         String token = Jwts.builder()
                 .setSubject(user.getUserId().toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 10))
-                .signWith(SignatureAlgorithm.HS512, "sdkjfklasdjfl;kajsdl;kfjl;akjflk")
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiry()))
+                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecretKey())
                 .compact();
 
         return ResponseEntity
                 .ok()
-                .header("Authorization", "Bearer " + token)
+                .header(jwtConfig.getAuthorizationHeader(), jwtConfig.getPrefix() + " " + token)
                 .body(convertDTO(user));
     }
 
