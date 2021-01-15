@@ -1,7 +1,7 @@
 package io.huyhoang.instagramclone.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.huyhoang.instagramclone.dto.UserError;
+import io.huyhoang.instagramclone.dto.ApiError;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -22,8 +22,8 @@ public class AuthEntryPointExceptionHandler implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        UserError userError = new UserError(Collections.singletonList("Unable to authenticate"));
+        ApiError apiError = new ApiError(Collections.singletonList("Unable to authenticate"));
 
-        new ObjectMapper().writeValue(response.getOutputStream(), userError);
+        new ObjectMapper().writeValue(response.getOutputStream(), apiError);
     }
 }

@@ -4,6 +4,7 @@ package io.huyhoang.instagramclone.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +29,9 @@ public class User extends Auditable{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
     private Profile profile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Post> posts;
 
     public User() {
     }
@@ -80,6 +84,14 @@ public class User extends Auditable{
         this.profile = profile;
     }
 
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -87,6 +99,8 @@ public class User extends Auditable{
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", profile=" + profile +
+                ", posts=" + posts +
                 '}';
     }
 }

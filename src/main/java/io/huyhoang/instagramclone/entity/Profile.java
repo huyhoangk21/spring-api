@@ -12,7 +12,7 @@ public class Profile extends Auditable{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "profile_id", nullable = false, unique = true)
+    @Column(name = "profile_id", nullable = false, unique = true, updatable = false)
     private UUID profileId;
 
     @Column(name = "bio", columnDefinition = "TEXT")
