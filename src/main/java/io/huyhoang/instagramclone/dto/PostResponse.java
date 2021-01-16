@@ -2,6 +2,7 @@ package io.huyhoang.instagramclone.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 public class PostResponse implements Serializable {
@@ -18,19 +19,23 @@ public class PostResponse implements Serializable {
 
     private final Instant updatedAt;
 
+    private final Set<CommentResponse> comments;
+
 
     public PostResponse(UUID postId,
                         UUID userId,
                         String caption,
                         String imageUrl,
                         Instant createdAt,
-                        Instant updatedAt) {
+                        Instant updatedAt,
+                        Set<CommentResponse> comments) {
         this.postId = postId;
         this.userId = userId;
         this.caption = caption;
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.comments = comments;
     }
 
     public UUID getPostId() {
@@ -55,5 +60,9 @@ public class PostResponse implements Serializable {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Set<CommentResponse> getComments() {
+        return comments;
     }
 }

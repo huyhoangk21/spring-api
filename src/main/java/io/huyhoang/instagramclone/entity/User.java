@@ -36,6 +36,12 @@ public class User extends Auditable{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
+    @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL)
+    private Set<Follow> followed;
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
+    private Set<Follow> following;
+
     public User() {
     }
 
@@ -103,6 +109,22 @@ public class User extends Auditable{
         this.comments = comments;
     }
 
+    public Set<Follow> getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(Set<Follow> followed) {
+        this.followed = followed;
+    }
+
+    public Set<Follow> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Set<Follow> following) {
+        this.following = following;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -113,6 +135,8 @@ public class User extends Auditable{
                 ", profile=" + profile +
                 ", posts=" + posts +
                 ", comments=" + comments +
+                ", followed=" + followed +
+                ", following=" + following +
                 '}';
     }
 }

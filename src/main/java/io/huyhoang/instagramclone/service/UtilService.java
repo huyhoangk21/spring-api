@@ -8,8 +8,11 @@ import io.huyhoang.instagramclone.entity.Comment;
 import io.huyhoang.instagramclone.entity.Post;
 import io.huyhoang.instagramclone.entity.Profile;
 import io.huyhoang.instagramclone.entity.User;
+import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
+import io.huyhoang.instagramclone.exception.UnauthorizedException;
 import io.huyhoang.instagramclone.repository.CommentRepository;
+import io.huyhoang.instagramclone.repository.FollowRepository;
 import io.huyhoang.instagramclone.repository.PostRepository;
 import io.huyhoang.instagramclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UtilService {
@@ -24,14 +28,17 @@ public class UtilService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final FollowRepository followRepository;
 
     @Autowired
     public UtilService(UserRepository userRepository,
                        PostRepository postRepository,
-                       CommentRepository commentRepository) {
+                       CommentRepository commentRepository,
+                       FollowRepository followRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.followRepository = followRepository;
     }
 
     public UUID currentAuth() {
@@ -44,6 +51,26 @@ public class UtilService {
 
     public boolean ownComment(Comment comment) {
         return comment.getUser().getUserId().equals(currentAuth());
+    }
+
+    public boolean canFollow(User followed, User following) {
+        if (followed.getUserId().equals(following.getUserId())) {
+            throw new UnauthorizedException();
+        }
+        if (followRepository.existsByFollowedAndFollowing(followed, following)) {
+            throw new ResourceAlreadyExistsException("Already followed");
+        }
+        return true;
+    }
+
+    public boolean canUnfollow(User followed, User following) {
+        if (followed.getUserId().equals(following.getUserId())) {
+            throw new UnauthorizedException();
+        }
+        if (!followRepository.existsByFollowedAndFollowing(followed, following)) {
+            throw new ResourceNotFoundException("Not yet followed");
+        }
+        return true;
     }
 
     public User getUser(UUID userId) {
@@ -65,7 +92,6 @@ public class UtilService {
         return new UserResponse(
                 user.getUserId(),
                 user.getUsername(),
-                user.getEmail(),
                 user.getCreatedAt(),
                 user.getUpdatedAt(),
                 getProfileResponse(user.getProfile()));
@@ -78,7 +104,8 @@ public class UtilService {
                 post.getCaption(),
                 post.getImageUrl(),
                 post.getCreatedAt(),
-                post.getUpdatedAt());
+                post.getUpdatedAt(),
+                post.getComments().stream().map(this::getCommentResponse).collect(Collectors.toSet()));
     }
 
     public CommentResponse getCommentResponse(Comment comment) {

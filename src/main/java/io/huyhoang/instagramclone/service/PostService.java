@@ -33,7 +33,7 @@ public class PostService {
         return postRepository
                 .findAllByUserOrderByCreatedAtDesc(user)
                 .stream()
-                .map(this::convertDTO)
+                .map(utilService::getPostResponse)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class PostService {
         User user = utilService.getUser(utilService.currentAuth());
         Post post = new Post(postRequest.getImageUrl(), postRequest.getCaption(), user);
         postRepository.save(post);
-        return convertDTO(post);
+        return utilService.getPostResponse(post);
     }
     @Transactional
     public PostResponse editPost(PostRequest postRequest, UUID postId) {
@@ -52,7 +52,7 @@ public class PostService {
         }
         post.setCaption(postRequest.getCaption());
         postRepository.save(post);
-        return convertDTO(post);
+        return utilService.getPostResponse(post);
     }
 
     @Transactional
@@ -62,15 +62,5 @@ public class PostService {
             throw new UnauthorizedException();
         }
         postRepository.delete(post);
-    }
-
-    private PostResponse convertDTO(Post post) {
-        return new PostResponse(
-                post.getPostId(),
-                post.getUser().getUserId(),
-                post.getCaption(),
-                post.getImageUrl(),
-                post.getCreatedAt(),
-                post.getUpdatedAt());
     }
 }
