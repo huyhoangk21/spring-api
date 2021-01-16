@@ -29,6 +29,9 @@ public class Post extends Auditable{
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private Set<PostLike> likes;
+
     public Post() {
     }
 
@@ -78,6 +81,14 @@ public class Post extends Auditable{
         this.comments = comments;
     }
 
+    public Set<PostLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<PostLike> likes) {
+        this.likes = likes;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -86,6 +97,7 @@ public class Post extends Auditable{
                 ", caption='" + caption + '\'' +
                 ", user=" + user +
                 ", comments=" + comments +
+                ", likes=" + likes +
                 '}';
     }
 }

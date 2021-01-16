@@ -3,6 +3,7 @@ package io.huyhoang.instagramclone.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +27,10 @@ public class Comment extends Auditable{
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<CommentLike> likes;
+
 
     public Comment() {
     }
@@ -68,6 +73,14 @@ public class Comment extends Auditable{
         this.post = post;
     }
 
+    public Set<CommentLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<CommentLike> likes) {
+        this.likes = likes;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
@@ -75,6 +88,7 @@ public class Comment extends Auditable{
                 ", content='" + content + '\'' +
                 ", user=" + user +
                 ", post=" + post +
+                ", likes=" + likes +
                 '}';
     }
 }
