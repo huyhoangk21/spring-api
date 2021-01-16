@@ -32,7 +32,7 @@ public class CommentService {
         Post post = utilService.getPost(postId);
         Comment comment = new Comment(commentRequest.getContent(), user, post);
         commentRepository.save(comment);
-        return convertDTO(comment);
+        return utilService.getCommentResponse(comment);
     }
 
     @Transactional
@@ -43,7 +43,7 @@ public class CommentService {
         }
         comment.setContent(commentRequest.getContent());
         commentRepository.save(comment);
-        return convertDTO(comment);
+        return utilService.getCommentResponse(comment);
     }
 
     @Transactional
@@ -53,15 +53,5 @@ public class CommentService {
             throw new UnauthorizedException();
         }
         commentRepository.delete(comment);
-    }
-
-    private CommentResponse convertDTO(Comment comment) {
-        return new CommentResponse(
-                comment.getCommentId(),
-                comment.getPost().getPostId(),
-                comment.getUser().getUserId(),
-                comment.getContent(),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt());
     }
 }

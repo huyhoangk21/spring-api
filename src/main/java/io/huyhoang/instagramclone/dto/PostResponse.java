@@ -19,8 +19,9 @@ public class PostResponse implements Serializable {
 
     private final Instant updatedAt;
 
-    private final Set<CommentResponse> comments;
+    private final Set<LikeResponse> likes;
 
+    private final Set<CommentResponse> comments;
 
     public PostResponse(UUID postId,
                         UUID userId,
@@ -28,6 +29,7 @@ public class PostResponse implements Serializable {
                         String imageUrl,
                         Instant createdAt,
                         Instant updatedAt,
+                        Set<LikeResponse> likes,
                         Set<CommentResponse> comments) {
         this.postId = postId;
         this.userId = userId;
@@ -35,6 +37,7 @@ public class PostResponse implements Serializable {
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.likes = likes;
         this.comments = comments;
     }
 
@@ -64,5 +67,9 @@ public class PostResponse implements Serializable {
 
     public Set<CommentResponse> getComments() {
         return comments;
+    }
+
+    public Set<LikeResponse> getLikes() {
+        return likes;
     }
 }

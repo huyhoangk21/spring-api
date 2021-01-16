@@ -1,13 +1,7 @@
 package io.huyhoang.instagramclone.service;
 
-import io.huyhoang.instagramclone.dto.CommentResponse;
-import io.huyhoang.instagramclone.dto.PostResponse;
-import io.huyhoang.instagramclone.dto.ProfileResponse;
-import io.huyhoang.instagramclone.dto.UserResponse;
-import io.huyhoang.instagramclone.entity.Comment;
-import io.huyhoang.instagramclone.entity.Post;
-import io.huyhoang.instagramclone.entity.Profile;
-import io.huyhoang.instagramclone.entity.User;
+import io.huyhoang.instagramclone.dto.*;
+import io.huyhoang.instagramclone.entity.*;
 import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.exception.UnauthorizedException;
@@ -142,6 +136,7 @@ public class UtilService {
                 post.getImageUrl(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
+                post.getLikes().stream().map(this::getPostLikeResponse).collect(Collectors.toSet()),
                 post.getComments().stream().map(this::getCommentResponse).collect(Collectors.toSet()));
     }
 
@@ -152,7 +147,8 @@ public class UtilService {
                 comment.getUser().getUserId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
-                comment.getUpdatedAt());
+                comment.getUpdatedAt(),
+                comment.getLikes().stream().map(this::getCommentLikeResponse).collect(Collectors.toSet()));
     }
 
     public ProfileResponse getProfileResponse(Profile profile) {
@@ -163,6 +159,14 @@ public class UtilService {
                 profile.getWebsiteUrl(),
                 profile.getCreatedAt(),
                 profile.getUpdatedAt());
+    }
+
+    public LikeResponse getPostLikeResponse(PostLike postLike) {
+        return new LikeResponse(postLike.getUser().getUserId());
+    }
+
+    public LikeResponse getCommentLikeResponse(CommentLike commentLike) {
+        return new LikeResponse(commentLike.getUser().getUserId());
     }
 
 }
