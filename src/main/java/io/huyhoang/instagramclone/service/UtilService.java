@@ -11,10 +11,7 @@ import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
 import io.huyhoang.instagramclone.exception.UnauthorizedException;
-import io.huyhoang.instagramclone.repository.CommentRepository;
-import io.huyhoang.instagramclone.repository.FollowRepository;
-import io.huyhoang.instagramclone.repository.PostRepository;
-import io.huyhoang.instagramclone.repository.UserRepository;
+import io.huyhoang.instagramclone.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,16 +26,22 @@ public class UtilService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final FollowRepository followRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     @Autowired
     public UtilService(UserRepository userRepository,
                        PostRepository postRepository,
                        CommentRepository commentRepository,
-                       FollowRepository followRepository) {
+                       FollowRepository followRepository,
+                       PostLikeRepository postLikeRepository,
+                       CommentLikeRepository commentLikeRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.followRepository = followRepository;
+        this.postLikeRepository = postLikeRepository;
+        this.commentLikeRepository = commentLikeRepository;
     }
 
     public UUID currentAuth() {
@@ -69,6 +72,40 @@ public class UtilService {
         }
         if (!followRepository.existsByFollowedAndFollowing(followed, following)) {
             throw new ResourceNotFoundException("Not yet followed");
+        }
+        return true;
+    }
+
+    public boolean canLikePost(Post post, User user) {
+        if (postLikeRepository.existsByPostAndUser(post, user)) {
+            throw new ResourceAlreadyExistsException("Post already liked");
+        }
+        return true;
+    }
+
+    public boolean canUnlikePost(Post post, User user) {
+        if (!post.getUser().getUserId().equals(user.getUserId())) {
+            throw new UnauthorizedException();
+        }
+        if (!postLikeRepository.existsByPostAndUser(post, user)) {
+            throw new ResourceNotFoundException("Post not yet liked");
+        }
+        return true;
+    }
+
+    public boolean canLikeComment(Comment comment, User user) {
+        if (commentLikeRepository.existsByCommentAndUser(comment, user)) {
+            throw new ResourceAlreadyExistsException("Comment already liked");
+        }
+        return true;
+    }
+
+    public boolean canUnlikeComment(Comment comment, User user) {
+        if (!comment.getUser().getUserId().equals(user.getUserId())) {
+            throw new UnauthorizedException();
+        }
+        if (!commentLikeRepository.existsByCommentAndUser(comment, user)) {
+            throw new ResourceNotFoundException("Comment not yet liked");
         }
         return true;
     }
