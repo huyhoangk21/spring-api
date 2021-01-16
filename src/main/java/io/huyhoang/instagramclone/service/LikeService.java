@@ -36,7 +36,6 @@ public class LikeService {
         }
     }
 
-
     @Transactional
     public void unlikePost(UUID postId) {
         Post post = utilService.getPost(postId);
@@ -44,9 +43,9 @@ public class LikeService {
         if (utilService.canUnlikePost(post, user)) {
             PostLike postLike = postLikeRepository.findByPostAndUser(post, user)
                     .orElseThrow(() -> new ResourceNotFoundException("Post Like does not exist"));
+            postLikeRepository.delete(postLike);
         }
     }
-
 
     @Transactional
     public void likeComment(UUID commentId) {
@@ -65,6 +64,7 @@ public class LikeService {
         if (utilService.canUnlikeComment(comment, user)) {
             CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment, user)
                     .orElseThrow(() -> new ResourceNotFoundException("Comment Like does not exist"));
+            commentLikeRepository.delete(commentLike);
         }
     }
 }

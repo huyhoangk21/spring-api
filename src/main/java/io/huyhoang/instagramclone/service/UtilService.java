@@ -78,9 +78,6 @@ public class UtilService {
     }
 
     public boolean canUnlikePost(Post post, User user) {
-        if (!post.getUser().getUserId().equals(user.getUserId())) {
-            throw new UnauthorizedException();
-        }
         if (!postLikeRepository.existsByPostAndUser(post, user)) {
             throw new ResourceNotFoundException("Post not yet liked");
         }
@@ -95,9 +92,6 @@ public class UtilService {
     }
 
     public boolean canUnlikeComment(Comment comment, User user) {
-        if (!comment.getUser().getUserId().equals(user.getUserId())) {
-            throw new UnauthorizedException();
-        }
         if (!commentLikeRepository.existsByCommentAndUser(comment, user)) {
             throw new ResourceNotFoundException("Comment not yet liked");
         }
