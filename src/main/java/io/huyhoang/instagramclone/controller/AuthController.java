@@ -34,4 +34,9 @@ public class AuthController {
     public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest);
     }
+
+    @GetMapping(value = "/me")
+    public UserResponse me() {
+        return userService.me();
+    }
 }

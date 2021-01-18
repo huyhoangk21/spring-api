@@ -111,4 +111,9 @@ public class UserService {
                 .map(utilService::getUserResponse)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public UserResponse me() {
+        return utilService.getUserResponse(utilService.getUser(utilService.currentAuth()));
+    }
 }
