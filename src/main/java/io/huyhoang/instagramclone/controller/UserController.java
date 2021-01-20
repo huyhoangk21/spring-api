@@ -20,11 +20,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserResponse> all() {
-        return userService.allUsers();
-    }
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<UserResponse> all() {
+//        return userService.allUsers();
+//    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
