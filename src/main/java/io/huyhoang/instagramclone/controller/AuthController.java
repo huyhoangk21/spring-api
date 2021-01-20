@@ -3,6 +3,7 @@ package io.huyhoang.instagramclone.controller;
 import io.huyhoang.instagramclone.dto.LoginRequest;
 import io.huyhoang.instagramclone.dto.SignupRequest;
 import io.huyhoang.instagramclone.dto.UserResponse;
+import io.huyhoang.instagramclone.dto.UserSummaryResponse;
 import io.huyhoang.instagramclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class AuthController {
     }
 
     @GetMapping(value = "/me")
-    public UserResponse me() {
+    public UserSummaryResponse me() {
         return userService.me();
     }
 }

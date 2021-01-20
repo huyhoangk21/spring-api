@@ -122,6 +122,13 @@ public class UtilService {
                 getProfileResponse(user.getProfile()));
     }
 
+    public UserSummaryResponse getUserSummaryResponse(User user) {
+        return new UserSummaryResponse(
+                user.getUserId(),
+                user.getUsername(),
+                user.getProfile().getImageUrl());
+    }
+
     public PostResponse getPostResponse(Post post) {
         return new PostResponse(
                 post.getPostId(),

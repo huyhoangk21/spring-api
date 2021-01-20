@@ -4,6 +4,7 @@ import io.huyhoang.instagramclone.config.JwtConfig;
 import io.huyhoang.instagramclone.dto.LoginRequest;
 import io.huyhoang.instagramclone.dto.SignupRequest;
 import io.huyhoang.instagramclone.dto.UserResponse;
+import io.huyhoang.instagramclone.dto.UserSummaryResponse;
 import io.huyhoang.instagramclone.entity.Profile;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
@@ -113,7 +114,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse me() {
-        return utilService.getUserResponse(utilService.getUser(utilService.currentAuth()));
+    public UserSummaryResponse me() {
+        return utilService.getUserSummaryResponse(utilService.getUser(utilService.currentAuth()));
     }
 }
