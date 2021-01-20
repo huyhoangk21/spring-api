@@ -117,4 +117,13 @@ public class UserService {
     public UserSummaryResponse me() {
         return utilService.getUserSummaryResponse(utilService.getUser(utilService.currentAuth()));
     }
+
+    @Transactional(readOnly = true)
+    public List<UserSummaryResponse> allByUsername(String username) {
+        return userRepository.findByUsernameContainingIgnoreCase(username)
+                .stream()
+                .map(utilService::getUserSummaryResponse)
+                .collect(Collectors.toList());
+    }
+
 }
