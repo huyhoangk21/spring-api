@@ -16,9 +16,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api/auth")
 public class AuthController {
 
-
     private final UserService userService;
-
 
     @Autowired
     public AuthController(UserService userService) {
@@ -27,12 +25,12 @@ public class AuthController {
 
     @PostMapping(value = "/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse signup(@Valid @RequestBody SignupRequest signupRequest) {
+    public UserSummaryResponse signup(@Valid @RequestBody SignupRequest signupRequest) {
         return userService.signup(signupRequest);
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<UserSummaryResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest);
     }
 

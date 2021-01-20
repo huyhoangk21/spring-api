@@ -55,7 +55,7 @@ public class UserService {
 
 
     @Transactional
-    public UserResponse signup(SignupRequest signupRequest) {
+    public UserSummaryResponse signup(SignupRequest signupRequest) {
 
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             throw new ResourceAlreadyExistsException("Username already exists");
@@ -74,12 +74,12 @@ public class UserService {
         userRepository.save(user);
         profileRepository.save(profile);
 
-        return utilService.getUserResponse(user);
+        return utilService.getUserSummaryResponse(user);
 
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<UserResponse> login(LoginRequest loginRequest) {
+    public ResponseEntity<UserSummaryResponse> login(LoginRequest loginRequest) {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(),
@@ -101,7 +101,7 @@ public class UserService {
         return ResponseEntity
                 .ok()
                 .header(jwtConfig.getAuthorizationHeader(), jwtConfig.getPrefix() + " " + token)
-                .body(utilService.getUserResponse(user));
+                .body(utilService.getUserSummaryResponse(user));
     }
 
     @Transactional(readOnly = true)

@@ -29,7 +29,7 @@ public class Profile extends Auditable{
 
     public Profile() {
         this.bio = "";
-        this.imageUrl = "";
+        this.imageUrl = "https://secure.gravatar.com/avatar/?s=190&d=mm&r=g";
         this.websiteUrl = "";
     }
 
