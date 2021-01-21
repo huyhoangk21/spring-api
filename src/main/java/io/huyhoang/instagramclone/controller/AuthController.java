@@ -2,7 +2,6 @@ package io.huyhoang.instagramclone.controller;
 
 import io.huyhoang.instagramclone.dto.LoginRequest;
 import io.huyhoang.instagramclone.dto.SignupRequest;
-import io.huyhoang.instagramclone.dto.UserResponse;
 import io.huyhoang.instagramclone.dto.UserSummaryResponse;
 import io.huyhoang.instagramclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

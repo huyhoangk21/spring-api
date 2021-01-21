@@ -5,20 +5,20 @@ import java.util.List;
 
 public class FollowResponse implements Serializable {
 
-    private final List<UserResponse> followers;
+    private final List<UserSummaryResponse> followers;
 
-    private final List<UserResponse> following;
+    private final List<UserSummaryResponse> following;
 
-    public FollowResponse(List<UserResponse> followers, List<UserResponse> following) {
+    public FollowResponse(List<UserSummaryResponse> followers, List<UserSummaryResponse> following) {
         this.followers = followers;
         this.following = following;
     }
 
-    public List<UserResponse> getFollowers() {
+    public List<UserSummaryResponse> getFollowers() {
         return followers;
     }
 
-    public List<UserResponse> getFollowing() {
+    public List<UserSummaryResponse> getFollowing() {
         return following;
     }
 }

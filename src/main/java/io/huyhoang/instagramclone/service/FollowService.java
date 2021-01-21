@@ -1,7 +1,7 @@
 package io.huyhoang.instagramclone.service;
 
 import io.huyhoang.instagramclone.dto.FollowResponse;
-import io.huyhoang.instagramclone.dto.UserResponse;
+import io.huyhoang.instagramclone.dto.UserSummaryResponse;
 import io.huyhoang.instagramclone.entity.Follow;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceNotFoundException;
@@ -52,14 +52,14 @@ public class FollowService {
     public FollowResponse getFollows(UUID userId) {
         User user = utilService.getUser(userId);
 
-        List<UserResponse> followers = user.getFollowed()
+        List<UserSummaryResponse> followers = user.getFollowed()
                 .stream()
-                .map(follow -> utilService.getUserResponse(follow.getFollowing()))
+                .map(follow -> utilService.getUserSummaryResponse(follow.getFollowing()))
                 .collect(Collectors.toList());
 
-        List<UserResponse> following = user.getFollowing()
+        List<UserSummaryResponse> following = user.getFollowing()
                 .stream()
-                .map(follow -> utilService.getUserResponse(follow.getFollowed()))
+                .map(follow -> utilService.getUserSummaryResponse(follow.getFollowed()))
                 .collect(Collectors.toList());
 
         return new FollowResponse(followers, following);

@@ -1,10 +1,7 @@
 package io.huyhoang.instagramclone.service;
 
 import io.huyhoang.instagramclone.config.JwtConfig;
-import io.huyhoang.instagramclone.dto.LoginRequest;
-import io.huyhoang.instagramclone.dto.SignupRequest;
-import io.huyhoang.instagramclone.dto.UserResponse;
-import io.huyhoang.instagramclone.dto.UserSummaryResponse;
+import io.huyhoang.instagramclone.dto.*;
 import io.huyhoang.instagramclone.entity.Profile;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.ResourceAlreadyExistsException;
@@ -26,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,15 +103,6 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> allUsers() {
-        return userRepository
-                .findAll()
-                .stream()
-                .map(utilService::getUserResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public UserSummaryResponse me() {
         return utilService.getUserSummaryResponse(utilService.getUser(utilService.currentAuth()));
     }
@@ -126,4 +115,8 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public UserDetailsResponse findById(UUID userId) {
+        return utilService.getUserDetailsResponse(utilService.getUser(userId));
+    }
 }

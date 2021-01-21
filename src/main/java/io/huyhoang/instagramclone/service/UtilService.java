@@ -113,20 +113,22 @@ public class UtilService {
                 .orElseThrow(() -> new ResourceNotFoundException("Comment does not exist"));
     }
 
-    public UserResponse getUserResponse(User user) {
-        return new UserResponse(
-                user.getUserId(),
-                user.getUsername(),
-                user.getCreatedAt(),
-                user.getUpdatedAt(),
-                getProfileResponse(user.getProfile()));
-    }
-
     public UserSummaryResponse getUserSummaryResponse(User user) {
         return new UserSummaryResponse(
                 user.getUserId(),
                 user.getUsername(),
                 user.getProfile().getImageUrl());
+    }
+
+    public UserDetailsResponse getUserDetailsResponse(User user) {
+        return new UserDetailsResponse(
+                user.getUsername(),
+                user.getProfile().getBio(),
+                user.getProfile().getWebsiteUrl(),
+                user.getProfile().getImageUrl(),
+                user.getPosts().size(),
+                user.getFollowed().size(),
+                user.getFollowing().size());
     }
 
     public PostResponse getPostResponse(Post post) {
