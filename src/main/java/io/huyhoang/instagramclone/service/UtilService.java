@@ -122,6 +122,7 @@ public class UtilService {
 
     public UserDetailsResponse getUserDetailsResponse(User user) {
         return new UserDetailsResponse(
+                user.getUserId(),
                 user.getUsername(),
                 user.getProfile().getBio(),
                 user.getProfile().getWebsiteUrl(),

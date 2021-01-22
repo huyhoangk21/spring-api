@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping(value="/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDetailsResponse findById(@PathVariable("userId")UUID userId) {
+    public UserDetailsResponse findById(@PathVariable("userId") UUID userId) {
         return userService.findById(userId);
     }
 }

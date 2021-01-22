@@ -2,7 +2,6 @@ package io.huyhoang.instagramclone.controller;
 
 import io.huyhoang.instagramclone.dto.ProfileRequest;
 import io.huyhoang.instagramclone.dto.ProfileResponse;
-import io.huyhoang.instagramclone.entity.Profile;
 import io.huyhoang.instagramclone.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

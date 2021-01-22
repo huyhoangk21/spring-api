@@ -1,8 +1,11 @@
 package io.huyhoang.instagramclone.dto;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class UserDetailsResponse implements Serializable {
+
+    private final UUID userId;
 
     private final String username;
 
@@ -18,13 +21,15 @@ public class UserDetailsResponse implements Serializable {
 
     private final int followingsCount;
 
-    public UserDetailsResponse(String username,
+    public UserDetailsResponse(UUID userId,
+                               String username,
                                String bio,
                                String websiteUrl,
                                String imageUrl,
                                int postsCount,
                                int followersCount,
                                int followingsCount) {
+        this.userId = userId;
         this.username = username;
         this.bio = bio;
         this.websiteUrl = websiteUrl;
@@ -32,6 +37,10 @@ public class UserDetailsResponse implements Serializable {
         this.postsCount = postsCount;
         this.followersCount = followersCount;
         this.followingsCount = followingsCount;
+    }
+
+    public UUID getUserId() {
+        return userId;
     }
 
     public String getUsername() {

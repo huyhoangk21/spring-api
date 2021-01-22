@@ -6,6 +6,8 @@ import io.huyhoang.instagramclone.entity.Post;
 import io.huyhoang.instagramclone.entity.User;
 import io.huyhoang.instagramclone.exception.UnauthorizedException;
 import io.huyhoang.instagramclone.repository.PostRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UtilService utilService;
+    Logger log = LoggerFactory.getLogger(PostService.class);
 
     @Autowired
     public PostService(PostRepository postRepository,
@@ -40,7 +43,9 @@ public class PostService {
     @Transactional
     public PostResponse addPost(PostRequest postRequest) {
         User user = utilService.getUser(utilService.currentAuth());
+
         Post post = new Post(postRequest.getImageUrl(), postRequest.getCaption(), user);
+
         postRepository.save(post);
         return utilService.getPostResponse(post);
     }

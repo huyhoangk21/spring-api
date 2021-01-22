@@ -3,6 +3,7 @@ package io.huyhoang.instagramclone.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,6 +40,8 @@ public class Post extends Auditable{
         this.imageUrl = imageUrl;
         this.caption = caption;
         this.user = user;
+        this.likes = new HashSet<>();
+        this.comments = new HashSet<>();
     }
 
     public UUID getPostId() {
